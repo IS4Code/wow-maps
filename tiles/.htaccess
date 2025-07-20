@@ -1,0 +1,7 @@
+AddHandler type-map .var
+
+RewriteEngine on
+
+RewriteRule ^/?([\d]+)/([a-fA-F0-9]{2})([a-fA-F0-9]+\.[^/]+)$ $1/$2/$2$3 [L]
+
+RewriteRule ^/?([\d]+)/([a-fA-F0-9]+)$ get.var?size=$1&hash=$2 [L]

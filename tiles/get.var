@@ -1,0 +1,10 @@
+URI: get
+
+URI: get.php/jpeg
+Content-type: image/jpeg; qs=0.6
+
+URI: get.php/png
+Content-type: image/png; qs=0.7
+
+URI: get.php/webp
+Content-type: image/webp; qs=0.8
