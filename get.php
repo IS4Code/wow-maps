@@ -5,8 +5,8 @@ $name = @$_GET['name'];
 if(!preg_match('/\d[.0-9]*/', $version)) die;
 if(!preg_match('/[a-zA-Z]+/', $name)) die;
 
-$main = "../data/$name.json";
-$prefix = "../data/$version/$name";
+$main = "data/$name.json";
+$prefix = "data/$version/$name";
 
 if(!file_exists($main))
 {
@@ -67,7 +67,7 @@ foreach($hashes as $id => $hash)
     $width += 1.5;
   }
   
-  $href = "../../tiles/256/$hash";
+  $href = "../tiles/256/$hash";
 ?>
 <image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" preserveAspectRatio="none" decoding="async"/>
 <?php
