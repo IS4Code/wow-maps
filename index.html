@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <style type="text/css">
-#canvas, #content, object {
+#canvas, #content, #content object {
   pointer-events: none;
 }
 
@@ -21,7 +21,7 @@ html, body, #view, #canvas, #content {
   max-width: 100%;
   max-height: 100%;
   box-sizing: border-box;
-  overflow: scroll;
+  overflow: clip;
   border: 3px groove buttonborder;
   background-color: canvas;
 }
@@ -31,10 +31,9 @@ html, body, #view, #canvas, #content {
 }
 
 #content {
-  transition: transform 0.15s;
+  transform: matrix(0.125, 0, 0, 0.125, 0, 0);
   transform-origin: 0 0;
 }
-
 </style>
 </head>
 <body>
@@ -44,7 +43,7 @@ html, body, #view, #canvas, #content {
 <section id="canvas">
 <!-- The visual content that is transformed -->
 <figure id="content">
-<object type="image/svg+xml" data="0.5.3/Azeroth.svg" width="16384" height="15872"></object>
+<object type="image/svg+xml" data="0.5.3/Azeroth.svg"></object>
 </figure>
 </section>
 </main>
@@ -53,14 +52,21 @@ var view = document.getElementById('view');
 var canvas = document.getElementById('canvas');
 var content = document.getElementById('content');
 
-var zoom = 1;
+var zoom = 0.125;
 var zoomFactor = 1.001;
-var zoomLimit = 64;
+var zoomLimit = 32;
+
+var xTranslate = 0;
+var yTranslate = 0;
 
 view.addEventListener('mousemove', event => {
   if(event.buttons & 1)
   {
-    view.scrollBy(-event.movementX, -event.movementY);
+    xTranslate += event.movementX;
+    yTranslate += event.movementY;
+    
+    content.style.transition = 'transform 0s';
+    content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
   }
 });
 
@@ -78,7 +84,7 @@ view.addEventListener('wheel', event => {
   var yCanvas = event.clientY - canvasRect.top;
   
   var contentRect = content.getBoundingClientRect();
-  // Position relative to the content
+  // Position relative to the content origin
   var xContent = event.clientX - contentRect.left;
   var yContent = event.clientY - contentRect.top;
   var xContentRel = xContent / contentRect.width;
@@ -88,9 +94,10 @@ view.addEventListener('wheel', event => {
   yContent = yContentRel * content.offsetHeight;
   
   // Translate coordinates: move content position to top-left (undo scaling by zoom), then move to canvas position
-  var xTranslate = xCanvas - xContent * zoom;
-  var yTranslate = yCanvas - yContent * zoom;
+  xTranslate = xCanvas - xContent * zoom;
+  yTranslate = yCanvas - yContent * zoom;
   
+  content.style.transition = zoom >= 0.25 ? 'transform 0.15s' : 'transform 0.05s';
   content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
 });
 </script>
