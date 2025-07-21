@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+#canvas, #content, object {
+  pointer-events: none;
+}
+
+html, body, #view, #canvas, #content {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#view {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow: scroll;
+  border: 3px groove buttonborder;
+  background-color: canvas;
+}
+
+#view:active {
+  cursor: grabbing;
+}
+
+#content {
+  transition: transform 0.15s;
+  transform-origin: 0 0;
+}
+
+</style>
+</head>
+<body>
+<!-- The scrollable container of the map -->
+<main id="view">
+<!-- The parent to which transformations are calculated -->
+<section id="canvas">
+<!-- The visual content that is transformed -->
+<figure id="content">
+<object type="image/svg+xml" data="0.5.3/Azeroth.svg" width="16384" height="15872"></object>
+</figure>
+</section>
+</main>
+<script type="text/javascript">
+var view = document.getElementById('view');
+var canvas = document.getElementById('canvas');
+var content = document.getElementById('content');
+
+var zoom = 1;
+var zoomFactor = 1.001;
+var zoomLimit = 64;
+
+view.addEventListener('mousemove', event => {
+  if(event.buttons & 1)
+  {
+    view.scrollBy(-event.movementX, -event.movementY);
+  }
+});
+
+view.addEventListener('wheel', event => {
+  event.preventDefault();
+  
+  zoom *= Math.pow(zoomFactor, -event.deltaY);
+  
+  if(zoom > zoomLimit) zoom = zoomLimit;
+  else if(zoom < 1/zoomLimit) zoom = 1/zoomLimit;
+  
+  var canvasRect = canvas.getBoundingClientRect();
+  // Position relative to the canvas (untransformed)
+  var xCanvas = event.clientX - canvasRect.left;
+  var yCanvas = event.clientY - canvasRect.top;
+  
+  var contentRect = content.getBoundingClientRect();
+  // Position relative to the content
+  var xContent = event.clientX - contentRect.left;
+  var yContent = event.clientY - contentRect.top;
+  var xContentRel = xContent / contentRect.width;
+  var yContentRel = yContent / contentRect.height;
+  // Position of the untransformed content 
+  xContent = xContentRel * content.offsetWidth;
+  yContent = yContentRel * content.offsetHeight;
+  
+  // Translate coordinates: move content position to top-left (undo scaling by zoom), then move to canvas position
+  var xTranslate = xCanvas - xContent * zoom;
+  var yTranslate = yCanvas - yContent * zoom;
+  
+  content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
+});
+</script>
+</body>
+</html>

@@ -28,7 +28,7 @@ header("Cache-Control: max-age=$expires");
 header("Content-Type: image/svg+xml");
 
 ?><?xml version="1.0" encoding="utf-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="<?=$width?>" height="<?=$height?>" viewBox="0 0 <?=$width?> <?=$height?>">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="<?=$width?>" height="<?=$height?>" viewBox="0 0 <?=$width?> <?=$height?>" preserveAspectRatio="none">
 <?php
 
 unset($hashes[""]);
