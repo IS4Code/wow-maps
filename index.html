@@ -71,12 +71,12 @@ html, body, #view, #canvas, #content {
   border-radius: 4px;
 }
 
-#controls input {
-  vertical-align: middle;
-}
-
 #controls table {
   border-spacing: 16px;
+}
+
+#controls table input {
+  vertical-align: middle;
 }
 
 #layers {
@@ -99,11 +99,23 @@ html, body, #view, #canvas, #content {
 <form autocomplete="off">
 <fieldset>
 <legend>Controls</legend>
+<label><input type="radio" name="continent" value="Azeroth" onchange="setContinent('Azeroth')" checked>Eastern Kingdoms</label>
+<label><input type="radio" name="continent" value="Kalimdor" onchange="setContinent('Kalimdor')">Kalimdor</label>
 <table>
 <tr>
 <td>
 <label>Layers:<br>
-<select id="layers" size="1" onchange="selectLayer()"></select>
+<select id="layers" size="1" onchange="selectLayer()"></select><br>
+<label>Add layer: <select id="addlayer" onchange="addSelectedLayer()">
+<optgroup id="Azeroth" label="Eastern Kingdoms">
+<option value="0.5.3/Azeroth">0.5.3 Minimap</option>
+<option value="0.0.2003.5/Azeroth">0.5.3 TaxiMap00</option>
+</optgroup>
+<optgroup id="Kalimdor" label="Kalimdor" style="display:none">
+<option value="0.5.3/Kalimdor">0.5.3 Minimap</option>
+<option value="0.0.2003.7/Kalimdor">0.5.3 TaxiMap01</option>
+</optgroup>
+</select></label>
 </label>
 </td>
 <td>
@@ -127,7 +139,8 @@ html, body, #view, #canvas, #content {
 <option value="luminosity">luminosity</option>
 <option value="plus-darker">plus-darker</option>
 <option value="plus-lighter">plus-lighter</option>
-</select></label>
+</select></label><br>
+<button type="button" onclick="removeSelectedLayer()">Remove layer</button>
 </td>
 </tr>
 </table>
@@ -142,7 +155,11 @@ var content = document.getElementById('content');
 var layers = document.getElementById('layers');
 var opacity = document.getElementById('opacity');
 var blend = document.getElementById('blend');
-var numLayers = 0;
+var addlayer = document.getElementById('addlayer');
+addlayer.value = null;
+var lastLayerIndex = 0;
+
+var continent = 'Azeroth';
 
 var zoom = 0.125;
 var zoomFactor = 1.001;
@@ -213,17 +230,17 @@ function selectLayer()
 
 function addLayer(name, path)
 {
-  numLayers++;
+  lastLayerIndex++;
   
   var option = document.createElement('option');
-  option.setAttribute('value', numLayers);
-  option.innerText = numLayers + ": " + name;
+  option.setAttribute('value', lastLayerIndex);
+  option.innerText = lastLayerIndex + ": " + name;
   layers.insertBefore(option, layers.firstChild);
-  layers.setAttribute('size', numLayers);
-  layers.value = numLayers;
+  layers.setAttribute('size', layers.childElementCount);
+  layers.value = lastLayerIndex;
   
   var layer = document.createElement('object');
-  layer.setAttribute('id', 'layer' + numLayers);
+  layer.setAttribute('id', 'layer' + lastLayerIndex);
   layer.setAttribute('data', path + '.svg');
   layer.setAttribute('type', 'image/svg+xml');
   
@@ -233,8 +250,38 @@ function addLayer(name, path)
   content.appendChild(layer);
 }
 
+function addSelectedLayer()
+{
+  var path = addlayer.value;
+  var name = addlayer.options[addlayer.selectedIndex].text;
+  addlayer.value = null;
+  
+  addLayer(name, path);
+}
+
+function removeSelectedLayer()
+{
+  document.getElementById('layer' + layers.value).remove();
+  layers.options[layers.selectedIndex].remove();
+  
+  if(layers.childElementCount == 0)
+  {
+    lastLayerIndex = 0;
+  }
+}
+
+function setContinent(newContinent)
+{
+  layers.innerHTML = "";
+  content.innerHTML = "";
+  lastLayerIndex = 0;
+  
+  document.getElementById(continent).style.display = 'none';
+  document.getElementById(newContinent).style.display = 'initial';
+  continent = newContinent;
+}
+
 addLayer("0.5.3 Minimap", '0.5.3/Azeroth');
-addLayer("0.5.3 TaxiMap00", '0.0.2003.5/Azeroth');
 </script>
 </body>
 </html>
