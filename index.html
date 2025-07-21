@@ -79,7 +79,7 @@ html, body, #view, #canvas, #content {
   border-spacing: 16px;
 }
 
-#controls select {
+#layers {
   width: 100%;
   overflow-y: auto;
 }
@@ -92,11 +92,6 @@ html, body, #view, #canvas, #content {
 <section id="canvas">
 <!-- The visual content that is transformed -->
 <figure id="content">
-<object id="layer1" data="0.5.3/Azeroth.svg" type="image/svg+xml" style="opacity:1">
-<img src="0.5.3/Azeroth.webp" class="fallback">
-</object>
-<object id="layer2" data="0.0.2003.5/Azeroth.svg" type="image/svg+xml" style="opacity:1">
-</object>
 </figure>
 </section>
 </main>
@@ -108,14 +103,31 @@ html, body, #view, #canvas, #content {
 <tr>
 <td>
 <label>Layers:<br>
-<select id="layers" size="2" onchange="selectLayer()">
-<option value="2" selected>2</option>
-<option value="1">1</option>
-</select>
+<select id="layers" size="1" onchange="selectLayer()"></select>
 </label>
 </td>
 <td>
-<label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer()" onchange="updateLayer()"></label>
+<label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer()" onchange="updateLayer()"></label><br>
+<label>Blend: <select id="blend" onchange="updateLayer()">
+<option value="normal" selected>normal</option>
+<option value="multiply">multiply</option>
+<option value="screen">screen</option>
+<option value="overlay">overlay</option>
+<option value="darken">darken</option>
+<option value="lighten">lighten</option>
+<option value="color-dodge">color-dodge</option>
+<option value="color-burn">color-burn</option>
+<option value="hard-light">hard-light</option>
+<option value="soft-light">soft-light</option>
+<option value="difference">difference</option>
+<option value="exclusion">exclusion</option>
+<option value="hue">hue</option>
+<option value="saturation">saturation</option>
+<option value="color">color</option>
+<option value="luminosity">luminosity</option>
+<option value="plus-darker">plus-darker</option>
+<option value="plus-lighter">plus-lighter</option>
+</select></label>
 </td>
 </tr>
 </table>
@@ -129,6 +141,8 @@ var content = document.getElementById('content');
 
 var layers = document.getElementById('layers');
 var opacity = document.getElementById('opacity');
+var blend = document.getElementById('blend');
+var numLayers = 0;
 
 var zoom = 0.125;
 var zoomFactor = 1.001;
@@ -185,6 +199,7 @@ function updateLayer()
   var layer = document.getElementById('layer' + index);
   
   layer.style.opacity = opacity.value / 100;
+  layer.style.mixBlendMode = blend.value;
 }
 
 function selectLayer()
@@ -193,7 +208,33 @@ function selectLayer()
   var layer = document.getElementById('layer' + index);
   
   opacity.value = layer.style.opacity * 100;
+  blend.value = layer.style.mixBlendMode;
 }
+
+function addLayer(name, path)
+{
+  numLayers++;
+  
+  var option = document.createElement('option');
+  option.setAttribute('value', numLayers);
+  option.innerText = numLayers + ": " + name;
+  layers.insertBefore(option, layers.firstChild);
+  layers.setAttribute('size', numLayers);
+  layers.value = numLayers;
+  
+  var layer = document.createElement('object');
+  layer.setAttribute('id', 'layer' + numLayers);
+  layer.setAttribute('data', path + '.svg');
+  layer.setAttribute('type', 'image/svg+xml');
+  
+  layer.style.opacity = 1;
+  layer.style.mixBlendMode = 'normal';
+  
+  content.appendChild(layer);
+}
+
+addLayer("0.5.3 Minimap", '0.5.3/Azeroth');
+addLayer("0.5.3 TaxiMap00", '0.0.2003.5/Azeroth');
 </script>
 </body>
 </html>
