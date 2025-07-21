@@ -1,7 +1,7 @@
 @echo off
 mkdir hashed
 (
-  echo [
+  echo {
   for %%i in (map*.png) do (
     for /f "delims=" %%h in ('magick identify -format "%%#" "%%i"') do (
       cp %%i "hashed/%%h.png"
@@ -9,5 +9,5 @@ mkdir hashed
       echo "%%~ni":"%%h",
     )
   )
-  echo "":""]
+  echo "":""}
 ) > hashes.json
