@@ -5,19 +5,20 @@ $name = @$_GET['name'];
 if(!preg_match('/\d[.0-9]*/', $version)) die;
 if(!preg_match('/[a-zA-Z]+/', $name)) die;
 
-$main = "data/$name.json";
+$info = "data/$name.json";
 $prefix = "data/$version/$name";
+$hashes = "$prefix-hashes.json";
 
-if(!file_exists($main))
+if(!file_exists($info) || !file_exists($hashes))
 {
   http_response_code(404);
   exit;
 }
 
-$info = json_decode(file_get_contents($main), true);
+$info = json_decode(file_get_contents($info), true);
 $width = $info['width'];
 $height = $info['height'];
-$hashes = json_decode(file_get_contents("$prefix-hashes.json"), true);
+$hashes = json_decode(file_get_contents($hashes), true);
 $linesH = @json_decode(@file_get_contents("$prefix-linesH.json"), true);
 $linesV = @json_decode(@file_get_contents("$prefix-linesV.json"), true);
 
