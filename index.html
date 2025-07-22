@@ -100,7 +100,7 @@ html, body, #view, #canvas, #content {
 </section>
 </main>
 <aside id="controls">
-<form autocomplete="off">
+<form autocomplete="off" id="form">
 <fieldset>
 <legend>Controls</legend>
 <table>
@@ -190,6 +190,7 @@ var canvas = document.getElementById('canvas');
 var content = document.getElementById('content');
 
 var controls = document.getElementById('controls');
+var form = document.getElementById('form');
 var layers = document.getElementById('layers');
 var opacity = document.getElementById('opacity');
 var blend = document.getElementById('blend');
@@ -207,12 +208,114 @@ var zoomLimit = 32;
 var xTranslate = 0;
 var yTranslate = 0;
 
+var fragment = window.location.hash;
+var updating = false;
+
+function updateFragment()
+{
+  if(updating) return;
+  
+  var params = new URLSearchParams();
+  
+  params.append('zoom', zoom.toFixed(6));
+  params.append('x', xTranslate.toFixed(2));
+  params.append('y', yTranslate.toFixed(2));
+  params.append('map', continent);
+  
+  for(var index = 1; index <= lastLayerIndex; index++)
+  {
+    var layer = document.getElementById('layer' + index);
+    if(layer)
+    {
+      params.append('layer', index);
+      params.append('path', layer.dataset.path);
+      params.append('name', layer.dataset.name);
+      params.append('opacity', layer.style.opacity);
+      params.append('blend', layer.style.mixBlendMode);
+      params.append('filter', layer.style.filter);
+    }
+  }
+  
+  window.location.hash = fragment = '#?' + params.toString();
+}
+
+function updateTransform()
+{
+  content.style.transition = 'transform 0s';
+  content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
+}
+
+function loadFragment(value)
+{
+  if(!value.startsWith('#?')) return;
+  
+  var params = new URLSearchParams(value.substring(1));
+  
+  var option, layer;
+  
+  updating = true;
+  try{
+    for(const [key, value] of params.entries())
+    {
+      switch(key)
+      {
+        case 'zoom':
+          zoom = parseFloat(value);
+          break;
+        case 'x':
+          xTranslate = parseFloat(value);
+          break;
+        case 'y':
+          yTranslate = parseFloat(value);
+          break;
+        case 'map':
+          form.continent.value = value;
+          setContinent(value);
+          break;
+        case 'layer':
+          var info = addLayer("", "");
+          option = info.option;
+          layer = info.layer;
+          break;
+        case 'path':
+          layer.setAttribute('data', value + '.svg');
+          layer.dataset.path = value;
+          break;
+        case 'name':
+          option.innerText = lastLayerIndex + ": " + value;
+          layer.dataset.name = value;
+          break;
+        case 'opacity':
+          layer.style.opacity = value;
+          break;
+        case 'blend':
+          layer.style.mixBlendMode = value;
+          break;
+        case 'filter':
+          layer.style.filter = value;
+          break;
+      }
+    }
+  }finally{
+    updating = false;
+  }
+  fragment = value;
+  
+  updateTransform();
+  layers.value = lastLayerIndex;
+  selectLayer();
+}
+
 view.addEventListener('mousedown', () => {
   controls.style.pointerEvents = 'none';
+    
+  updateFragment();
 });
 
 view.addEventListener('mouseup', () => {
   controls.style.pointerEvents = null;
+    
+  updateFragment();
 });
 
 view.addEventListener('mousemove', event => {
@@ -221,8 +324,7 @@ view.addEventListener('mousemove', event => {
     xTranslate += event.movementX;
     yTranslate += event.movementY;
     
-    content.style.transition = 'transform 0s';
-    content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
+    updateTransform();
   }
 });
 
@@ -255,6 +357,8 @@ view.addEventListener('wheel', event => {
   
   content.style.transition = zoom >= 0.25 ? 'transform 0.15s' : 'transform 0.05s';
   content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
+    
+  updateFragment();
 });
 
 function updateLayer()
@@ -265,6 +369,8 @@ function updateLayer()
   layer.style.opacity = opacity.value / 100;
   layer.style.mixBlendMode = blend.value;
   layer.style.filter = filter.value;
+  
+  updateFragment();
 }
 
 function selectLayer()
@@ -291,12 +397,18 @@ function addLayer(name, path)
   var layer = document.createElement('object');
   layer.setAttribute('id', 'layer' + lastLayerIndex);
   layer.setAttribute('data', path + '.svg');
+  layer.dataset.name = name;
+  layer.dataset.path = path;
   layer.setAttribute('type', 'image/svg+xml');
   
   layer.style.opacity = 1;
   layer.style.mixBlendMode = 'normal';
   
   content.appendChild(layer);
+  
+  updateFragment();
+  
+  return {option: option, layer: layer};
 }
 
 function addSelectedLayer()
@@ -323,6 +435,7 @@ function removeSelectedLayer()
   }else{
     selectLayer();
   }
+  updateFragment();
 }
 
 function setContinent(newContinent)
@@ -334,9 +447,29 @@ function setContinent(newContinent)
   document.getElementById(continent).style.display = 'none';
   document.getElementById(newContinent).style.display = 'initial';
   continent = newContinent;
+  
+  updateFragment();
 }
 
-addLayer("0.5.3 Minimap", '0.5.3/Azeroth');
+if(!fragment)
+{
+  addLayer("0.5.3 Minimap", '0.5.3/Azeroth');
+}else{
+  loadFragment(fragment);
+}
+
+window.onhashchange = function()
+{
+  if(window.location.hash == fragment)
+  {
+    return;
+  }
+  fragment = window.location.hash;
+  if(fragment)
+  {
+    loadFragment(fragment);
+  }
+};
 </script>
 </body>
 </html>
