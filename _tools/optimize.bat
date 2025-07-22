@@ -1,5 +1,4 @@
 @echo off
-for %%i in (*.png) do (
-  echo %%~ni>&2
+for %%i in (*.png) do @(
   optipng -o7 "%%i"
 )
