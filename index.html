@@ -7,6 +7,10 @@
   pointer-events: none;
 }
 
+html, body, #view {
+  overflow: hidden;
+}
+
 html, body, #view, #canvas, #content {
   width: 100%;
   height: 100%;
@@ -21,7 +25,6 @@ html, body, #view, #canvas, #content {
   max-width: 100%;
   max-height: 100%;
   box-sizing: border-box;
-  overflow: clip;
   border: 3px groove buttonborder;
   background-color: canvas;
 }
@@ -72,10 +75,11 @@ html, body, #view, #canvas, #content {
 }
 
 #controls table {
-  border-spacing: 16px;
+  margin: 4px;
+  border-spacing: 4px;
 }
 
-#controls table input {
+#controls table input[type="range"] {
   vertical-align: middle;
 }
 
@@ -99,28 +103,17 @@ html, body, #view, #canvas, #content {
 <form autocomplete="off">
 <fieldset>
 <legend>Controls</legend>
+<table>
+<tr>
+<td colspan="2">
 <label><input type="radio" name="continent" value="Azeroth" onchange="setContinent('Azeroth')" checked>Eastern Kingdoms</label>
 <label><input type="radio" name="continent" value="Kalimdor" onchange="setContinent('Kalimdor')">Kalimdor</label>
-<table>
+</td>
+</tr>
 <tr>
 <td>
 <label>Layers:<br>
-<select id="layers" size="1" onchange="selectLayer()"></select><br>
-<label>Add layer: <select id="addlayer" onchange="addSelectedLayer()">
-<optgroup id="Azeroth" label="Eastern Kingdoms">
-<option value="0.5.3/Azeroth">0.5.3 Minimap</option>
-<option value="0.0.2003.5/Azeroth">0.5.3 TaxiMap00</option>
-<option value="0.9.1/Azeroth">0.9.1 Minimap</option>
-<option value="1.0.0/Azeroth">1.0.0 Minimap</option>
-</optgroup>
-<optgroup id="Kalimdor" label="Kalimdor" style="display:none">
-<option value="0.5.3/Kalimdor">0.5.3 Minimap</option>
-<option value="0.0.2003.7/Kalimdor">0.5.3 TaxiMap01</option>
-<option value="0.9.1/Kalimdor">0.9.1 Minimap</option>
-<option value="1.0.0/Kalimdor">1.0.0 Minimap</option>
-</optgroup>
-</select></label>
-</label>
+<select id="layers" size="1" onchange="selectLayer()"></select>
 </td>
 <td>
 <label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer()" onchange="updateLayer()"></label><br>
@@ -144,6 +137,38 @@ html, body, #view, #canvas, #content {
 <option value="plus-darker">plus-darker</option>
 <option value="plus-lighter">plus-lighter</option>
 </select></label><br>
+<label>Filter: <select id="filter" onchange="updateLayer()">
+<option value="" selected>none</option>
+<option value="grayscale(100%)">grayscale</option>
+<option value="invert(100%)">invert</option>
+<option value="brightness(1.5)">brighten</option>
+<option value="brightness(0.6666)">darken</option>
+<option value="saturate(200%)">saturate</option>
+<option value="saturate(50%)">desaturate</option>
+<option value="url(&quot;#high-pass&quot;)">high pass</option>
+<option value="url(&quot;#low-pass&quot;)">low pass</option>
+</select></label>
+</td>
+</tr>
+<tr>
+<td>
+<label>Add layer: <select id="addlayer" onchange="addSelectedLayer()">
+<optgroup id="Azeroth" label="Eastern Kingdoms">
+<option value="0.5.3/Azeroth">0.5.3 Minimap</option>
+<option value="0.0.2003.5/Azeroth">0.5.3 TaxiMap00</option>
+<option value="0.9.1/Azeroth">0.9.1 Minimap</option>
+<option value="1.0.0/Azeroth">1.0.0 Minimap</option>
+</optgroup>
+<optgroup id="Kalimdor" label="Kalimdor" style="display:none">
+<option value="0.5.3/Kalimdor">0.5.3 Minimap</option>
+<option value="0.0.2003.7/Kalimdor">0.5.3 TaxiMap01</option>
+<option value="0.9.1/Kalimdor">0.9.1 Minimap</option>
+<option value="1.0.0/Kalimdor">1.0.0 Minimap</option>
+</optgroup>
+</select></label>
+</label>
+</td>
+<td>
 <button type="button" onclick="removeSelectedLayer()">Remove layer</button>
 </td>
 </tr>
@@ -151,14 +176,24 @@ html, body, #view, #canvas, #content {
 </fieldset>
 </form>
 </aside>
+<svg width="0" height="0">
+<filter id="high-pass" color-interpolation-filters="sRGB">
+<feConvolveMatrix order="3 3" preserveAlpha="true" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1" divisor="1" bias="0.5"></feConvolveMatrix>
+</filter>
+<filter id="low-pass" color-interpolation-filters="sRGB">
+<feConvolveMatrix order="3 3" preserveAlpha="true" kernelMatrix="1 1 1 1 0 1 1 1 1" divisor="8"></feConvolveMatrix>
+</filter>
+</svg>
 <script type="text/javascript">
 var view = document.getElementById('view');
 var canvas = document.getElementById('canvas');
 var content = document.getElementById('content');
 
+var controls = document.getElementById('controls');
 var layers = document.getElementById('layers');
 var opacity = document.getElementById('opacity');
 var blend = document.getElementById('blend');
+var filter = document.getElementById('filter');
 var addlayer = document.getElementById('addlayer');
 addlayer.value = null;
 var lastLayerIndex = 0;
@@ -171,6 +206,14 @@ var zoomLimit = 32;
 
 var xTranslate = 0;
 var yTranslate = 0;
+
+view.addEventListener('mousedown', () => {
+  controls.style.pointerEvents = 'none';
+});
+
+view.addEventListener('mouseup', () => {
+  controls.style.pointerEvents = null;
+});
 
 view.addEventListener('mousemove', event => {
   if(event.buttons & 1)
@@ -221,6 +264,7 @@ function updateLayer()
   
   layer.style.opacity = opacity.value / 100;
   layer.style.mixBlendMode = blend.value;
+  layer.style.filter = filter.value;
 }
 
 function selectLayer()
@@ -230,6 +274,7 @@ function selectLayer()
   
   opacity.value = layer.style.opacity * 100;
   blend.value = layer.style.mixBlendMode;
+  filter.value = layer.style.filter;
 }
 
 function addLayer(name, path)
@@ -261,6 +306,7 @@ function addSelectedLayer()
   addlayer.value = null;
   
   addLayer(name, path);
+  selectLayer();
 }
 
 function removeSelectedLayer()
@@ -268,9 +314,14 @@ function removeSelectedLayer()
   document.getElementById('layer' + layers.value).remove();
   layers.options[layers.selectedIndex].remove();
   
-  if(layers.childElementCount == 0)
+  var size = layers.childElementCount;
+  layers.setAttribute('size', size);
+  
+  if(size == 0)
   {
     lastLayerIndex = 0;
+  }else{
+    selectLayer();
   }
 }
 
