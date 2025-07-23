@@ -87,6 +87,18 @@ html, body, #view, #canvas, #content {
   width: 100%;
   overflow-y: auto;
 }
+
+#layers option::before {
+  content: attr(value) ": "
+}
+
+fieldset.properties {
+  background: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
 </style>
 </head>
 <body>
@@ -111,12 +123,20 @@ html, body, #view, #canvas, #content {
 </td>
 </tr>
 <tr>
-<td>
+<td rowspan="2">
 <label>Layers:<br>
 <select id="layers" size="1" onchange="selectLayer()"></select>
 </td>
 <td>
-<label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer()" onchange="updateLayer()"></label><br>
+<fieldset class="properties">
+<label>Source: <select id="setlayer" onchange="updateLayer()"></select></label>
+</fieldset>
+</td>
+</tr>
+<tr>
+<td>
+<fieldset class="properties">
+<label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer(false)" onchange="updateLayer()"></label><br>
 <label>Blend: <select id="blend" onchange="updateLayer()">
 <option value="normal" selected>normal</option>
 <option value="multiply">multiply</option>
@@ -148,18 +168,19 @@ html, body, #view, #canvas, #content {
 <option value="url(&quot;#high-pass&quot;)">high pass</option>
 <option value="url(&quot;#low-pass&quot;)">low pass</option>
 </select></label>
+</fieldset>
 </td>
 </tr>
 <tr>
 <td>
 <label>Add layer: <select id="addlayer" onchange="addSelectedLayer()">
-<optgroup id="Azeroth" label="Eastern Kingdoms">
+<optgroup name="Azeroth" label="Eastern Kingdoms">
 <option value="0.5.3/Azeroth">0.5.3 Minimap</option>
 <option value="0.0.2003.5/Azeroth">0.5.3 TaxiMap00</option>
 <option value="0.9.1/Azeroth">0.9.1 Minimap</option>
 <option value="1.0.0/Azeroth">1.0.0 Minimap</option>
 </optgroup>
-<optgroup id="Kalimdor" label="Kalimdor" style="display:none">
+<optgroup name="Kalimdor" label="Kalimdor" style="display:none">
 <option value="0.0.2001.10/Kalimdor">October 2001 Design map</option>
 <option value="0.5.3/Kalimdor">0.5.3 Minimap</option>
 <option value="0.0.2003.7/Kalimdor">0.5.3 TaxiMap01</option>
@@ -170,7 +191,9 @@ html, body, #view, #canvas, #content {
 </label>
 </td>
 <td>
+<fieldset class="properties">
 <button type="button" onclick="removeSelectedLayer()">Remove layer</button>
+</fieldset>
 </td>
 </tr>
 </table>
@@ -196,8 +219,10 @@ var layers = document.getElementById('layers');
 var opacity = document.getElementById('opacity');
 var blend = document.getElementById('blend');
 var filter = document.getElementById('filter');
+var setlayer = document.getElementById('setlayer');
 var addlayer = document.getElementById('addlayer');
 addlayer.value = null;
+setlayer.innerHTML = addlayer.innerHTML;
 var lastLayerIndex = 0;
 
 var continent = 'Azeroth';
@@ -229,8 +254,8 @@ function updateFragment()
     if(layer)
     {
       params.append('layer', index);
-      params.append('path', layer.dataset.path);
-      params.append('name', layer.dataset.name);
+      params.append('source', layer.dataset.path);
+      params.append('label', layer.dataset.name);
       params.append('opacity', layer.style.opacity);
       params.append('blend', layer.style.mixBlendMode);
       params.append('filter', layer.style.filter);
@@ -279,11 +304,13 @@ function loadFragment(value)
           layer = info.layer;
           break;
         case 'path':
+        case 'source':
           layer.setAttribute('data', value + '.svg');
           layer.dataset.path = value;
           break;
         case 'name':
-          option.innerText = lastLayerIndex + ": " + value;
+        case 'label':
+          option.innerText = value;
           layer.dataset.name = value;
           break;
         case 'opacity':
@@ -362,16 +389,41 @@ view.addEventListener('wheel', event => {
   updateFragment();
 });
 
-function updateLayer()
+function updateLayer(update_fragment)
 {
   var index = layers.value;
   var layer = document.getElementById('layer' + index);
+  
+  var path = setlayer.value;
+  var name = setlayer.options[setlayer.selectedIndex].text;
+  
+  if(layer.dataset.path != path)
+  {
+    layer.setAttribute('data', path + '.svg');
+    layer.dataset.path = path;
+  }
+  if(layer.dataset.name != name)
+  {
+    layers.options[layers.selectedIndex].innerText = name;
+    layer.dataset.name = name;
+  }
   
   layer.style.opacity = opacity.value / 100;
   layer.style.mixBlendMode = blend.value;
   layer.style.filter = filter.value;
   
-  updateFragment();
+  if(typeof update_fragment === 'undefined' || update_fragment)
+  {
+    updateFragment();
+  }
+}
+
+function toggleProperties(toggle)
+{
+  for(var element of document.getElementsByClassName('properties'))
+  {
+    element.disabled = !toggle;
+  }
 }
 
 function selectLayer()
@@ -379,9 +431,15 @@ function selectLayer()
   var index = layers.value;
   var layer = document.getElementById('layer' + index);
   
+  if(!layer) return;
+  
+  setlayer.value = layer.dataset.path;
+  
   opacity.value = layer.style.opacity * 100;
   blend.value = layer.style.mixBlendMode;
   filter.value = layer.style.filter;
+  
+  toggleProperties(true);
 }
 
 function addLayer(name, path)
@@ -390,7 +448,7 @@ function addLayer(name, path)
   
   var option = document.createElement('option');
   option.setAttribute('value', lastLayerIndex);
-  option.innerText = lastLayerIndex + ": " + name;
+  option.innerText = name;
   layers.insertBefore(option, layers.firstChild);
   layers.setAttribute('size', layers.childElementCount);
   layers.value = lastLayerIndex;
@@ -433,9 +491,15 @@ function removeSelectedLayer()
   if(size == 0)
   {
     lastLayerIndex = 0;
-  }else{
-    selectLayer();
   }
+  
+  if(size == 1)
+  {
+    layers.value = layers.options[0].value;
+  }else{
+    toggleProperties(false);
+  }
+  
   updateFragment();
 }
 
@@ -445,9 +509,17 @@ function setContinent(newContinent)
   content.innerHTML = "";
   lastLayerIndex = 0;
   
-  document.getElementById(continent).style.display = 'none';
-  document.getElementById(newContinent).style.display = 'initial';
+  for(var element of document.getElementsByName(continent))
+  {
+    element.style.display = 'none';
+  }
+  for(var element of document.getElementsByName(newContinent))
+  {
+    element.style.display = 'initial';
+  }
   continent = newContinent;
+  
+  toggleProperties(false);
   
   updateFragment();
 }
