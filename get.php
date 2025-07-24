@@ -3,7 +3,7 @@ $version = @$_GET['version'];
 $name = @$_GET['name'];
 
 if(!preg_match('/\d[.0-9]*/', $version)) die;
-if(!preg_match('/[a-zA-Z]+/', $name)) die;
+if(!preg_match('/[a-zA-Z0-9]+/', $name)) die;
 
 $info = "data/$name.json";
 $prefix = "data/$version/$name";
