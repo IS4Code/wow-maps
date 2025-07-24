@@ -247,8 +247,8 @@ function updateFragment()
   var params = new URLSearchParams();
   
   params.append('zoom', zoom.toFixed(6));
-  params.append('x', xTranslate.toFixed(2));
-  params.append('y', yTranslate.toFixed(2));
+  params.append('x', (xTranslate - view.offsetWidth / 2).toFixed(2));
+  params.append('y', (yTranslate - view.offsetHeight / 2).toFixed(2));
   params.append('map', continent);
   
   for(var index = 1; index <= lastLayerIndex; index++)
@@ -258,7 +258,6 @@ function updateFragment()
     {
       params.append('layer', index);
       params.append('source', layer.dataset.path);
-      params.append('label', layer.dataset.name);
       params.append('opacity', layer.style.opacity);
       params.append('blend', layer.style.mixBlendMode);
       params.append('filter', layer.style.filter);
@@ -292,10 +291,10 @@ function loadFragment(value)
           zoom = parseFloat(value);
           break;
         case 'x':
-          xTranslate = parseFloat(value);
+          xTranslate = parseFloat(value) + view.offsetWidth / 2;
           break;
         case 'y':
-          yTranslate = parseFloat(value);
+          yTranslate = parseFloat(value) + view.offsetHeight / 2;
           break;
         case 'map':
           form.continent.value = value;
@@ -310,10 +309,15 @@ function loadFragment(value)
         case 'source':
           layer.setAttribute('data', value + '.svg');
           layer.dataset.path = value;
+          setlayer.value = value;
+          
+          var label = setlayer.options[setlayer.selectedIndex].text;
+          option.text = label;
+          layer.dataset.name = label;
           break;
         case 'name':
         case 'label':
-          option.innerText = value;
+          option.text = value;
           layer.dataset.name = value;
           break;
         case 'opacity':
@@ -407,7 +411,7 @@ function updateLayer(update_fragment)
   }
   if(layer.dataset.name != name)
   {
-    layers.options[layers.selectedIndex].innerText = name;
+    layers.options[layers.selectedIndex].text = name;
     layer.dataset.name = name;
   }
   
@@ -451,7 +455,7 @@ function addLayer(name, path)
   
   var option = document.createElement('option');
   option.setAttribute('value', lastLayerIndex);
-  option.innerText = name;
+  option.text = name;
   layers.insertBefore(option, layers.firstChild);
   layers.setAttribute('size', layers.childElementCount);
   layers.value = lastLayerIndex;
@@ -498,7 +502,8 @@ function removeSelectedLayer()
   
   if(size == 1)
   {
-    layers.value = layers.options[0].value;
+    layers.selectedIndex = 0;
+    selectLayer();
   }else{
     toggleProperties(false);
   }
@@ -529,7 +534,7 @@ function setContinent(newContinent)
 
 if(!fragment)
 {
-  addLayer("0.5.3 Minimap", '0.5.3/Azeroth');
+  addLayer("September 2002 Minimap", '0.0.2002.9/Azeroth');
 }else{
   loadFragment(fragment);
 }
