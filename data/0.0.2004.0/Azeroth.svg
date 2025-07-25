@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16384" height="15872" viewBox="0 0 16384 15872" preserveAspectRatio="none">
+<defs>
+<mask id="m1">
+<image x="0" y="0" width="16384" height="15872" href="Azeroth1Mask" xlink:href="Azeroth1Mask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+</defs>
+<image x="6296" y="4532.24" width="4737.04" height="7361.28" href="Azeroth1" xlink:href="Azeroth1" preserveAspectRatio="none" decoding="async" mask="url(#m1)"/>
+<image x="6605.52" y="11631.44" width="3890.48" height="4963.2" href="Azeroth3" xlink:href="Azeroth3" preserveAspectRatio="none" decoding="async"/>
+<image x="8128" y="8987.52" width="2475.28" height="3044.48" href="Azeroth2" xlink:href="Azeroth2" preserveAspectRatio="none" decoding="async"/>
+</svg>
