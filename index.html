@@ -265,9 +265,18 @@ function updateFragment()
     {
       params.append('layer', index);
       params.append('source', layer.dataset.path);
-      params.append('opacity', layer.style.opacity);
-      params.append('blend', layer.style.mixBlendMode);
-      params.append('filter', layer.style.filter);
+      if(layer.style.opacity != 1)
+      {
+        params.append('opacity', layer.style.opacity);
+      }
+      if(layer.style.mixBlendMode != 'normal')
+      {
+        params.append('blend', layer.style.mixBlendMode);
+      }
+      if(layer.style.filter)
+      {
+        params.append('filter', layer.style.filter);
+      }
     }
   }
   
@@ -311,6 +320,8 @@ function loadFragment(value)
           var info = addLayer("", "");
           option = info.option;
           layer = info.layer;
+          layer.style.opacity = 1;
+          layer.style.mixBlendMode = 'normal';
           break;
         case 'path':
         case 'source':
