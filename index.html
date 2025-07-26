@@ -165,8 +165,9 @@ fieldset.properties {
 <option value="brightness(0.6666)">darken</option>
 <option value="saturate(200%)">saturate</option>
 <option value="saturate(50%)">desaturate</option>
-<option value="url(&quot;#high-pass&quot;)">high pass</option>
-<option value="url(&quot;#low-pass&quot;)">low pass</option>
+<option value="url(#sharpen)">sharpen</option>
+<option value="url(#high-pass)">high pass</option>
+<option value="url(#low-pass)">low pass</option>
 </select></label>
 </fieldset>
 </td>
@@ -216,6 +217,9 @@ fieldset.properties {
 </filter>
 <filter id="low-pass" color-interpolation-filters="sRGB">
 <feConvolveMatrix order="3 3" preserveAlpha="true" kernelMatrix="1 1 1 1 0 1 1 1 1" divisor="8"></feConvolveMatrix>
+</filter>
+<filter id="sharpen" color-interpolation-filters="sRGB">
+<feConvolveMatrix order="3 3" preserveAlpha="true" kernelMatrix="-1 -1 -1 -1 17 -1 -1 -1 -1" divisor="9"></feConvolveMatrix>
 </filter>
 </svg>
 <script type="text/javascript">
