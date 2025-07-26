@@ -1,3 +1,137 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14592" height="14336" viewBox="0 0 14592 14336" preserveAspectRatio="none">
-<image x="-50.8" y="-15.04" width="16452.24" height="16394.8" href="Kalimdor" xlink:href="Kalimdor" preserveAspectRatio="none" decoding="async"/>
+<filter id="fAshenvale">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="7168" y="6144" width="3072" height="1536" href="AshenvaleMask" xlink:href="AshenvaleMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="7168" y="6144" width="3072" height="1536" href="Ashenvale" xlink:href="Ashenvale" filter="url(#fAshenvale)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fKalidar">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="6400.17" y="2816.08" width="2559.67" height="1279.83" href="KalidarMask" xlink:href="KalidarMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="6400.17" y="2816.08" width="2559.67" height="1279.83" href="Kalidar" xlink:href="Kalidar" filter="url(#fKalidar)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fFelwood">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="7936" y="4608" width="1536" height="2048" href="FelwoodMask" xlink:href="FelwoodMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="7936" y="4608" width="1536" height="2048" href="Felwood" xlink:href="Felwood" filter="url(#fFelwood)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fDarkshore">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="7680" y="4352" width="1536" height="1792" href="DarkshoreMask" xlink:href="DarkshoreMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="7680" y="4352" width="1536" height="1792" href="Darkshore" xlink:href="Darkshore" filter="url(#fDarkshore)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fStonetalon">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="7168" y="6656" width="1536" height="1536" href="StonetalonMask" xlink:href="StonetalonMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="7168" y="6656" width="1536" height="1536" href="Stonetalon" xlink:href="Stonetalon" filter="url(#fStonetalon)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fFeralas">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="6911.99" y="9983.99" width="2048.03" height="1024.01" href="FeralasMask" xlink:href="FeralasMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="6911.99" y="9983.99" width="2048.03" height="1024.01" href="Feralas" xlink:href="Feralas" filter="url(#fFeralas)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fDustwallow">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="9215.99" y="9215.65" width="1280.03" height="1536.7" href="DustwallowMask" xlink:href="DustwallowMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="9215.99" y="9215.65" width="1280.03" height="1536.7" href="Dustwallow" xlink:href="Dustwallow" filter="url(#fDustwallow)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fThousandneedles">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="8448" y="9984" width="1536" height="1280" href="ThousandneedlesMask" xlink:href="ThousandneedlesMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="8448" y="9984" width="1536" height="1280" href="Thousandneedles" xlink:href="Thousandneedles" filter="url(#fThousandneedles)" preserveAspectRatio="none" decoding="async"/>
+<filter id="fDesolace">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="6400" y="8704" width="1536" height="768" href="DesolaceMask" xlink:href="DesolaceMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="6400" y="8704" width="1536" height="768" href="Desolace" xlink:href="Desolace" filter="url(#fDesolace)" preserveAspectRatio="none" decoding="async"/>
 </svg>
