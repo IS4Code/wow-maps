@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <style type="text/css">
+/* Map area */
+
 #canvas, #content, #content * {
   pointer-events: none;
 }
@@ -41,7 +43,7 @@ html, body, #view, #canvas, #content {
   position: relative;
 }
 
-#content * {
+#content > * {
   position: absolute;
   top: 0;
   left: 0;
@@ -51,6 +53,18 @@ html, body, #view, #canvas, #content {
   transform: scale(2);
   transform-origin: 0 0;
 }
+
+#grid {
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  overflow: visible !important;
+  transition: stroke-width 0.1s;
+}
+
+/* Controls */
 
 #controls {
   position: fixed;
@@ -117,9 +131,12 @@ fieldset.properties {
 <legend>Controls</legend>
 <table>
 <tr>
-<td colspan="2">
+<td>
 <label><input type="radio" name="continent" value="Azeroth" onchange="setContinent('Azeroth')" checked>Eastern Kingdoms</label>
 <label><input type="radio" name="continent" value="Kalimdor" onchange="setContinent('Kalimdor')">Kalimdor</label>
+</td>
+<td>
+<label>Grid size: <input id="gridsize" type="number" value="0" min="0" step="16" oninput="updateGrid()"></label>
 </td>
 </tr>
 <tr>
@@ -232,6 +249,7 @@ var content = document.getElementById('content');
 var controls = document.getElementById('controls');
 var form = document.getElementById('form');
 var layers = document.getElementById('layers');
+var gridsize = document.getElementById('gridsize');
 var opacity = document.getElementById('opacity');
 var blend = document.getElementById('blend');
 var filter = document.getElementById('filter');
@@ -253,16 +271,27 @@ var yTranslate = 0;
 var fragment = window.location.hash;
 var updating = false;
 
+function getGridStroke(size)
+{
+  return 1.4 / zoom;
+}
+
 function updateFragment()
 {
   if(updating) return;
   
   var params = new URLSearchParams();
   
+  params.append('map', continent);
+  
   params.append('zoom', zoom.toFixed(6));
   params.append('x', (xTranslate - view.offsetWidth / 2).toFixed(2));
   params.append('y', (yTranslate - view.offsetHeight / 2).toFixed(2));
-  params.append('map', continent);
+  
+  if(gridsize.value != 0)
+  {
+    params.append('grid', gridsize.value);
+  }
   
   for(var index = 1; index <= lastLayerIndex; index++)
   {
@@ -321,6 +350,10 @@ function loadFragment(value)
         case 'map':
           form.continent.value = value;
           setContinent(value);
+          break;
+        case 'grid':
+          gridsize.value = parseFloat(value);
+          updateGrid(false);
           break;
         case 'layer':
           var info = addLayer("", "");
@@ -416,6 +449,12 @@ view.addEventListener('wheel', event => {
   
   content.style.transition = zoom >= 0.25 ? 'transform 0.15s' : 'transform 0.05s';
   content.style.transform = `matrix(${zoom}, 0, 0, ${zoom}, ${xTranslate}, ${yTranslate})`;
+  
+  var grid = document.getElementById('grid');
+  if(grid)
+  {
+    grid.setAttribute('stroke-width', getGridStroke(grid.dataset.size) + 'px');
+  }
     
   updateFragment();
 });
@@ -442,6 +481,77 @@ function updateLayer(update_fragment)
   layer.style.opacity = opacity.value / 100;
   layer.style.mixBlendMode = blend.value;
   layer.style.filter = filter.value;
+  
+  if(typeof update_fragment === 'undefined' || update_fragment)
+  {
+    updateFragment();
+  }
+}
+
+function updateGrid(update_fragment)
+{
+  var size = parseFloat(gridsize.value);
+  var grid = document.getElementById('grid');
+  
+  if(size == 0)
+  {
+    if(grid)
+    {
+      grid.remove();
+    }else{
+      return;
+    }
+  }else{
+    if(size < 1)
+    {
+      gridsize.value = 0;
+      return;
+    }
+
+    var svg = 'http://www.w3.org/2000/svg';
+    
+    if(!grid)
+    {
+      grid = document.createElementNS(svg, 'svg');
+      grid.setAttribute('id', 'grid');
+      grid.setAttribute('stroke-width', getGridStroke(size) + 'px');
+      content.appendChild(grid);
+    }else if(grid.dataset.size == size)
+    {
+      return;
+    }else{
+      grid.innerHTML = "";
+    }
+    
+    grid.dataset.size = size;
+    
+    var maxSize = 16384;
+    
+    var defs = document.createElementNS(svg, 'defs');
+    var pattern = document.createElementNS(svg, 'pattern');
+    pattern.setAttribute('id', 'gridlines');
+    pattern.setAttribute('width', size);
+    pattern.setAttribute('height', size);
+    pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+    
+    var path = document.createElementNS(svg, 'path');
+    path.setAttribute('d', `M ${size} 0 L 0 0 0 ${size}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'black');
+    
+    pattern.appendChild(path);
+    
+    defs.appendChild(pattern);
+    
+    grid.appendChild(defs);
+    
+    var rect = document.createElementNS(svg, 'rect');
+    rect.setAttribute('width', maxSize);
+    rect.setAttribute('height', maxSize);
+    rect.setAttribute('fill', 'url(#gridlines)');
+    rect.setAttribute('stroke', 'black');
+    grid.appendChild(rect);
+  }
   
   if(typeof update_fragment === 'undefined' || update_fragment)
   {
@@ -553,6 +663,7 @@ function setContinent(newContinent)
   
   toggleProperties(false);
   
+  updateGrid(false);
   updateFragment();
 }
 
