@@ -1,7 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"/></head>
+<title>WoW Map Viewer</title>
+<meta property="og:title" content="WoW Map Viewer">
+<meta property="og:site_name" content="wow.is4.site">
+<meta name="theme-color" content="#2a4060">
 <style type="text/css">
 /* Map area */
 
@@ -29,7 +34,7 @@ html, body, #view, #canvas, #content {
   max-height: 100%;
   box-sizing: border-box;
   border: 3px double buttonborder;
-  background-color: canvas;
+  background-color: #2a4060;
 }
 
 #view:active {
@@ -125,6 +130,15 @@ fieldset.properties {
   left: 0;
   bottom: 0;
   cursor: nesw-resize;
+}
+
+#controls footer {
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  margin: 6px;
 }
 </style>
 </head>
@@ -242,7 +256,13 @@ fieldset.properties {
 </fieldset>
 </td>
 </tr>
+<tr>
+</tr>
 </table>
+<footer>
+Made by <a href="//is4.site/">IS4</a>.<br>
+Code on <a href="//github.com/IS4Code/wow-maps">GitHub</a>.
+</footer>
 </fieldset>
 <button type="button" id="grip">
 <svg viewBox="0 0 5 5" width="6pt">
@@ -295,6 +315,8 @@ var zoomLimit = 32;
 var xTranslate = 0;
 var yTranslate = 0;
 
+var title = document.title;
+
 var fragment = window.location.hash;
 var updating = false;
 
@@ -320,6 +342,8 @@ function updateFragment()
     params.append('grid', gridsize.value);
   }
   
+  var names = [];
+  
   for(var index = 1; index <= lastLayerIndex; index++)
   {
     var layer = document.getElementById('layer' + index);
@@ -327,6 +351,7 @@ function updateFragment()
     {
       params.append('layer', index);
       params.append('source', layer.dataset.path);
+      names.push(layer.dataset.name);
       if(layer.style.opacity != 1)
       {
         params.append('opacity', layer.style.opacity);
@@ -343,6 +368,14 @@ function updateFragment()
   }
   
   window.location.hash = fragment = '#?' + params.toString();
+  
+  if(names.length > 0)
+  {
+    names.reverse();
+    document.title = `${names.join(", ")} \u2012 ${title}`;
+  }else{
+    document.title = title;
+  }
 }
 
 function updateTransform()
@@ -420,6 +453,7 @@ function loadFragment(value)
   }
   fragment = value;
   
+  updateFragment();
   updateTransform();
   layers.value = lastLayerIndex;
   selectLayer();
