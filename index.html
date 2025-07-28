@@ -5,7 +5,7 @@
 <style type="text/css">
 /* Map area */
 
-#canvas, #content, #content * {
+#canvas, #content, #content *, #controls legend {
   pointer-events: none;
   user-select: none;
 }
@@ -75,6 +75,11 @@ html, body, #view, #canvas, #content {
   display: inline-block;
 }
 
+#controls form {
+  position: relative;
+  transform-origin: top right;
+}
+
 #controls fieldset, #controls legend {
   background-color: canvas;
 }
@@ -113,6 +118,13 @@ fieldset.properties {
   margin: 0;
   border: none;
   border-radius: 0;
+}
+
+#grip {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  cursor: nesw-resize;
 }
 </style>
 </head>
@@ -231,6 +243,16 @@ fieldset.properties {
 </tr>
 </table>
 </fieldset>
+<button type="button" id="grip">
+<svg viewBox="0 0 5 5" width="6pt">
+<rect x="0" y="0" width="1" height="1"/>
+<rect x="0" y="2" width="1" height="1"/>
+<rect x="2" y="2" width="1" height="1"/>
+<rect x="0" y="4" width="1" height="1"/>
+<rect x="2" y="4" width="1" height="1"/>
+<rect x="4" y="4" width="1" height="1"/>
+</svg>
+</button>
 </form>
 </aside>
 <svg width="0" height="0">
@@ -251,6 +273,7 @@ var content = document.getElementById('content');
 
 var controls = document.getElementById('controls');
 var form = document.getElementById('form');
+var grip = document.getElementById('grip');
 var layers = document.getElementById('layers');
 var gridsize = document.getElementById('gridsize');
 var opacity = document.getElementById('opacity');
@@ -460,6 +483,41 @@ view.addEventListener('wheel', event => {
   }
     
   updateFragment();
+});
+
+grip.addEventListener('pointerdown', event => {
+  grip.setPointerCapture(event.pointerId);
+  
+  var rect = form.getBoundingClientRect();
+  
+  // Relative offset from bottom left
+  var x = event.clientX - rect.left;
+  var y = rect.bottom - event.clientY;
+  
+  var xOffset = x / form.offsetWidth;
+  var yOffset = y / form.offsetHeight;
+  
+  grip.onpointermove = event => {
+    var rect = form.getBoundingClientRect();
+    
+    // Relative position from top right
+    var x = rect.right - event.clientX;
+    var y = event.clientY - rect.top;
+    
+    var xRel = x / form.offsetWidth + xOffset;
+    var yRel = y / form.offsetHeight + yOffset;
+    
+    var factor = Math.sqrt(xRel * yRel);
+    if(factor < 0.2) factor = 0.2; 
+    
+    form.style.transform = `scale(${factor})`;
+  };
+});
+
+grip.addEventListener('pointerup', event => {
+  grip.releasePointerCapture(event.pointerId);
+    
+  grip.onpointermove = null;
 });
 
 function updateLayer(update_fragment)
