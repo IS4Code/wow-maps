@@ -42,7 +42,7 @@ html, body, #view, #canvas, #content {
 }
 
 #content {
-  transform: matrix(0.125, 0, 0, 0.125, 0, 0);
+  transform: matrix(0.125, 0, 0, 0.125, -512, -512);
   transform-origin: 0 0;
   transition: transform 0s;
   
@@ -312,8 +312,8 @@ var zoom = 0.125;
 var zoomFactor = 1.001;
 var zoomLimit = 32;
 
-var xTranslate = 0;
-var yTranslate = 0;
+var xTranslate = -512;
+var yTranslate = -512;
 
 var title = document.title;
 
