@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16384" height="15872" viewBox="0 0 16384 15872" preserveAspectRatio="none">
+<image x="1264" y="5888" width="14624" height="10064" href="Azeroth" xlink:href="Azeroth" preserveAspectRatio="none" decoding="async"/>
+<filter id="fDuskwood">
+<feComponentTransfer color-interpolation-filters="sRGB" result="outer">
+<feFuncR type="linear" slope="3"/>
+<feFuncG type="linear" slope="3"/>
+<feFuncB type="linear" slope="3"/>
+</feComponentTransfer>
+<feImage x="7866" y="12926" width="1130" height="672" href="DuskwoodMask" xlink:href="DuskwoodMask" preserveAspectRatio="none" result="mask"/>
+<feComponentTransfer in="mask" result="invmask">
+<feFuncA type="linear" slope="-1" intercept="1"/>
+</feComponentTransfer>
+<feComposite in="SourceGraphic" in2="mask" operator="in" result="innerMasked"/>
+<feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
+<feBlend in="innerMasked" in2="outerMasked"/>
+</filter>
+<image x="7866" y="12926" width="1130" height="672" href="Duskwood" xlink:href="Duskwood" filter="url(#fDuskwood)" preserveAspectRatio="none" decoding="async"/>
+<image x="6864" y="10224" width="2048" height="2048" href="DunMorogh" xlink:href="DunMorogh" preserveAspectRatio="none" decoding="async"/>
+<image x="7168" y="13312" width="256" height="256" href="../tiles/256/7b100a746ebb1a5d40bbc0233d22f1b2c9c41607d598b1d9dc4c171387847bf3" xlink:href="../tiles/256/7b100a746ebb1a5d40bbc0233d22f1b2c9c41607d598b1d9dc4c171387847bf3" preserveAspectRatio="none" decoding="async"/>
+<image x="7424" y="13312" width="256" height="256" href="../tiles/256/615007adfaf1d64ddfae52b312b9863bbba01e3d1afcb8068ed52f2d2c3d8623" xlink:href="../tiles/256/615007adfaf1d64ddfae52b312b9863bbba01e3d1afcb8068ed52f2d2c3d8623" preserveAspectRatio="none" decoding="async"/>
+<image x="7168" y="13056" width="256" height="256" href="../tiles/256/0e1ee51a7ee39e5da4194692e8f02ca2cd8057c862647012594c9175aa9f53a8" xlink:href="../tiles/256/0e1ee51a7ee39e5da4194692e8f02ca2cd8057c862647012594c9175aa9f53a8" preserveAspectRatio="none" decoding="async"/>
+<image x="7168" y="12800" width="256" height="256" href="../tiles/256/dd15ab7f736eec8304bea72c7833ff10af7e6157238f4b0f6eb1cc6fd39ccc5c" xlink:href="../tiles/256/dd15ab7f736eec8304bea72c7833ff10af7e6157238f4b0f6eb1cc6fd39ccc5c" preserveAspectRatio="none" decoding="async"/>
+<image x="7424" y="13056" width="256" height="256" href="../tiles/256/78261b9b3d4bdac19b965094092b447b58936b9e50aa6f5a03e8831cb8332a24" xlink:href="../tiles/256/78261b9b3d4bdac19b965094092b447b58936b9e50aa6f5a03e8831cb8332a24" preserveAspectRatio="none" decoding="async"/>
+<image x="7680" y="13312" width="256" height="256" href="../tiles/256/51cd1a3fb54c83362539170d25b459df62e63da6c7a16ca485cb99181fc5edb0" xlink:href="../tiles/256/51cd1a3fb54c83362539170d25b459df62e63da6c7a16ca485cb99181fc5edb0" preserveAspectRatio="none" decoding="async"/>
+<image x="7424" y="12800" width="256" height="256" href="../tiles/256/639004a97d2463243da4f58151fa884847107dc7701157407238ec64218ed235" xlink:href="../tiles/256/639004a97d2463243da4f58151fa884847107dc7701157407238ec64218ed235" preserveAspectRatio="none" decoding="async"/>
+<image x="7680" y="13056" width="256" height="256" href="../tiles/256/692503c778bebe67fb07becf4b1fc30dc27a614d5284a70dfdabb9ba1b8f5634" xlink:href="../tiles/256/692503c778bebe67fb07becf4b1fc30dc27a614d5284a70dfdabb9ba1b8f5634" preserveAspectRatio="none" decoding="async"/>
+<image x="7680" y="12800" width="256" height="256" href="../tiles/256/181280d840f0b73149ceac6fa7d9b92dd999a7d4f1ea52d8c46aa4e3b9137002" xlink:href="../tiles/256/181280d840f0b73149ceac6fa7d9b92dd999a7d4f1ea52d8c46aa4e3b9137002" preserveAspectRatio="none" decoding="async"/>
+</svg>
