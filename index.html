@@ -757,7 +757,23 @@ function setContinent(newContinent)
   }
   continent = newContinent;
   
-  toggleProperties(false);
+  if(updating)
+  {
+    toggleProperties(false);
+  }else{
+    switch(newContinent)
+    {
+      case 'Azeroth':
+        addLayer("September 2002 Minimap", '0.0.2002.9/Azeroth');
+        break;
+      case 'Kalimdor':
+        addLayer("0.5.3 TaxiMap01", '0.0.2003.6/Kalimdor');
+        break;
+      default:
+        toggleProperties(false);
+        break;
+    }
+  }
   
   updateGrid(false);
   updateFragment();
