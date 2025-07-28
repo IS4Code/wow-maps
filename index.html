@@ -171,15 +171,14 @@ fieldset.properties {
 <label>Layers:<br>
 <select id="layers" size="1" onchange="selectLayer()"></select>
 </td>
-<td>
-<fieldset class="properties">
-<label>Source: <select id="setlayer" onchange="updateLayer()"></select></label>
-</fieldset>
-</td>
+<th align="left" valign="bottom">
+Selected layer
+</th>
 </tr>
 <tr>
-<td>
+<td valign="top">
 <fieldset class="properties">
+<label>Source: <select id="setlayer" onchange="updateLayer()"></select></label><br>
 <label>Opacity: <input type="range" id="opacity" min="0" max="100" value="100" oninput="updateLayer(false)" onchange="updateLayer()"></label><br>
 <label>Blend: <select id="blend" onchange="updateLayer()">
 <option value="normal" selected>normal</option>
