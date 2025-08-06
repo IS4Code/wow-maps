@@ -333,8 +333,8 @@ function updateFragment()
   params.append('map', continent);
   
   params.append('zoom', zoom.toFixed(6));
-  params.append('x', (xTranslate - view.offsetWidth / 2).toFixed(2));
-  params.append('y', (yTranslate - view.offsetHeight / 2).toFixed(2));
+  params.append('x', ((xTranslate - view.offsetWidth / 2) / zoom).toFixed(2));
+  params.append('y', ((yTranslate - view.offsetHeight / 2) / zoom).toFixed(2));
   
   if(gridsize.value != 0)
   {
@@ -401,10 +401,10 @@ function loadFragment(value)
           zoom = parseFloat(value);
           break;
         case 'x':
-          xTranslate = parseFloat(value) + view.offsetWidth / 2;
+          xTranslate = parseFloat(value) * zoom + view.offsetWidth / 2;
           break;
         case 'y':
-          yTranslate = parseFloat(value) + view.offsetHeight / 2;
+          yTranslate = parseFloat(value) * zoom + view.offsetHeight / 2;
           break;
         case 'map':
           form.continent.value = value;
