@@ -54,7 +54,7 @@ if(file_exists($layers))
   {
     list($x, $y, $width, $height) = $data;
     
-    if(file_exists("data/$version/{$href}Mask.webp"))
+    if(file_exists("data/$version/$href-LightMask.webp"))
     {
 ?>
 <filter id="f<?=$href?>">
@@ -63,7 +63,7 @@ if(file_exists($layers))
 <feFuncG type="linear" slope="3"/>
 <feFuncB type="linear" slope="3"/>
 </feComponentTransfer>
-<feImage x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>Mask" xlink:href="<?=$href?>Mask" preserveAspectRatio="none" result="mask"/>
+<feImage x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>-LightMask" xlink:href="<?=$href?>-LightMask" preserveAspectRatio="none" result="mask"/>
 <feComponentTransfer in="mask" result="invmask">
 <feFuncA type="linear" slope="-1" intercept="1"/>
 </feComponentTransfer>
