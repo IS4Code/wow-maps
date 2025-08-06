@@ -17,8 +17,8 @@ if(!file_exists($info) || (!file_exists($hashes) && !file_exists($layers)))
 }
 
 $info = json_decode(file_get_contents($info), true);
-$width = $info['width'];
-$height = $info['height'];
+$mapwidth = $info['width'];
+$mapheight = $info['height'];
 
 $expires = 24 * 60 * 60;
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + $expires));
@@ -27,7 +27,7 @@ header("Cache-Control: max-age=$expires");
 header("Content-Type: image/svg+xml");
 
 ?><?xml version="1.0" encoding="utf-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="<?=$width?>" height="<?=$height?>" viewBox="0 0 <?=$width?> <?=$height?>" preserveAspectRatio="none">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="<?=$mapwidth?>" height="<?=$mapheight?>" viewBox="0 0 <?=$mapwidth?> <?=$mapheight?>" preserveAspectRatio="none">
 <?php
 
 if(file_exists($layers))
@@ -72,6 +72,22 @@ if(file_exists($layers))
 <feBlend in="innerMasked" in2="outerMasked"/>
 </filter>
 <image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" filter="url(#f<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
+<?php
+    }else if(file_exists("data/$version/$href-AlphaMask.webp"))
+    {
+?>
+<mask id="m<?=$href?>">
+<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>-AlphaMask" xlink:href="<?=$href?>-AlphaMask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" mask="url(#m<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
+<?php
+    }else if(file_exists("data/$version/$href-GlobalAlphaMask.webp"))
+    {
+?>
+<mask id="m<?=$href?>">
+<image x="0" y="0" width="<?=$mapwidth?>" height="<?=$mapheight?>" href="<?=$href?>-GlobalAlphaMask" xlink:href="<?=$href?>-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" mask="url(#m<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
 <?php
     }else{
 ?>
