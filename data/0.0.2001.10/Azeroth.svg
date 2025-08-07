@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16384" height="15872" viewBox="0 0 16384 15872" preserveAspectRatio="none">
+<mask id="mAzeroth1Concept">
+<image x="0" y="0" width="16384" height="15872" href="Azeroth1Concept-GlobalAlphaMask" xlink:href="Azeroth1Concept-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+<mask id="mAzeroth2Concept">
+<image x="0" y="0" width="16384" height="15872" href="Azeroth2Concept-GlobalAlphaMask" xlink:href="Azeroth2Concept-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+<mask id="mAzeroth3Concept">
+<image x="0" y="0" width="16384" height="15872" href="Azeroth3Concept-GlobalAlphaMask" xlink:href="Azeroth3Concept-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
+</mask>
+<g mask="url(#mAzeroth1Concept)"><use x="4803.997662" y="4952.789701" width="8263.079756" height="12260.17956" href="AzerothConcept.svg#root" xlink:href="AzerothConcept.svg"/></g>
+<g mask="url(#mAzeroth3Concept)"><use x="4198.240682" y="5518.113183" width="9928.915355" height="12045.84055" href="AzerothConcept.svg#root" xlink:href="AzerothConcept.svg"/></g>
+<g mask="url(#mAzeroth2Concept)"><use x="3181.477848" y="4422.044444" width="11400.9826" height="13653.33333" href="AzerothConcept.svg#root" xlink:href="AzerothConcept.svg"/></g>
+</svg>
