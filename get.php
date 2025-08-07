@@ -1,12 +1,12 @@
 <?php
 $version = @$_GET['version'];
-$name = @$_GET['name'];
+$mapname = @$_GET['name'];
 
 if(!preg_match('/\d[.0-9]*/', $version)) die;
-if(!preg_match('/[a-zA-Z0-9]+/', $name)) die;
+if(!preg_match('/[a-zA-Z0-9]+/', $mapname)) die;
 
-$info = "data/$name.json";
-$prefix = "data/$version/$name";
+$info = "data/$mapname.json";
+$prefix = "data/$version/$mapname";
 $hashes = "$prefix-hashes.json";
 $layers = "$prefix-layers.json";
 
@@ -27,7 +27,7 @@ header("Cache-Control: max-age=$expires");
 header("Content-Type: image/svg+xml");
 
 ?><?xml version="1.0" encoding="utf-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="<?=$mapwidth?>" height="<?=$mapheight?>" viewBox="0 0 <?=$mapwidth?> <?=$mapheight?>" preserveAspectRatio="none">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="root" width="<?=$mapwidth?>" height="<?=$mapheight?>" viewBox="0 0 <?=$mapwidth?> <?=$mapheight?>" preserveAspectRatio="none">
 <?php
 
 if(file_exists($layers))
@@ -54,16 +54,25 @@ if(file_exists($layers))
   {
     list($x, $y, $width, $height) = $data;
     
-    if(file_exists("data/$version/$href-LightMask.webp"))
+    if(substr($href, -4) != '.svg')
+    {
+      $name = $href;
+    }else{
+      $name = substr($href, 0, -4);
+    }
+    
+    $attrs = '';
+    
+    if(file_exists("data/$version/$name-LightMask.webp"))
     {
 ?>
-<filter id="f<?=$href?>">
+<filter id="f<?=$name?>">
 <feComponentTransfer color-interpolation-filters="sRGB" result="outer">
 <feFuncR type="linear" slope="3"/>
 <feFuncG type="linear" slope="3"/>
 <feFuncB type="linear" slope="3"/>
 </feComponentTransfer>
-<feImage x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>-LightMask" xlink:href="<?=$href?>-LightMask" preserveAspectRatio="none" result="mask"/>
+<feImage x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$name?>-LightMask" xlink:href="<?=$name?>-LightMask" preserveAspectRatio="none" result="mask"/>
 <feComponentTransfer in="mask" result="invmask">
 <feFuncA type="linear" slope="-1" intercept="1"/>
 </feComponentTransfer>
@@ -71,27 +80,34 @@ if(file_exists($layers))
 <feComposite in="outer" in2="invmask" operator="in" result="outerMasked"/>
 <feBlend in="innerMasked" in2="outerMasked"/>
 </filter>
-<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" filter="url(#f<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
 <?php
-    }else if(file_exists("data/$version/$href-AlphaMask.webp"))
+      $attrs .= ' filter="url(#f'.$name.')"';
+    }
+    if(file_exists("data/$version/$name-AlphaMask.webp"))
     {
 ?>
-<mask id="m<?=$href?>">
-<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>-AlphaMask" xlink:href="<?=$href?>-AlphaMask" preserveAspectRatio="none" decoding="async"/>
+<mask id="m<?=$name?>">
+<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$name?>-AlphaMask" xlink:href="<?=$name?>-AlphaMask" preserveAspectRatio="none" decoding="async"/>
 </mask>
-<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" mask="url(#m<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
 <?php
-    }else if(file_exists("data/$version/$href-GlobalAlphaMask.webp"))
+      $attrs .= ' mask="url(#m'.$name.')"';
+    }else if(file_exists("data/$version/$name-GlobalAlphaMask.webp"))
     {
 ?>
-<mask id="m<?=$href?>">
-<image x="0" y="0" width="<?=$mapwidth?>" height="<?=$mapheight?>" href="<?=$href?>-GlobalAlphaMask" xlink:href="<?=$href?>-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
+<mask id="m<?=$name?>">
+<image x="0" y="0" width="<?=$mapwidth?>" height="<?=$mapheight?>" href="<?=$name?>-GlobalAlphaMask" xlink:href="<?=$name?>-GlobalAlphaMask" preserveAspectRatio="none" decoding="async"/>
 </mask>
-<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" mask="url(#m<?=$href?>)" preserveAspectRatio="none" decoding="async"/>
+<?php
+    }
+    
+    if(substr($href, -4) != '.svg')
+    {
+?>
+<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>"<?=$attrs?> preserveAspectRatio="none" decoding="async"/>
 <?php
     }else{
 ?>
-<image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" preserveAspectRatio="none" decoding="async"/>
+<use x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>#root" xlink:href="<?=$href?>#root"<?=$attrs?>/>
 <?php
     }
   }
