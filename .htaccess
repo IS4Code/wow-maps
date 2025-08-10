@@ -1,6 +1,6 @@
 RewriteEngine on
 
-RewriteRule ^/?(\d[-.0-9]*/[a-z]+)/([-a-zA-Z0-9]+)(\.webp)?$ data/$1/$2.webp [L]
+RewriteRule ^/?(\d[-.0-9]*/[a-z]+)/([-a-zA-Z0-9]+(/[-a-zA-Z0-9]+)*)(\.webp)?$ data/$1/$2.webp [L]
 
 RewriteCond %{DOCUMENT_ROOT}/maps/data/$1/$2.svg -f
 RewriteRule ^/?(\d[-.0-9]*/[a-z]+)/([-a-zA-Z0-9]+)\.svg$ data/$1/$2.svg [L]
