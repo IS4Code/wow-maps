@@ -1,12 +1,12 @@
 <?php
-$version = @$_GET['version'];
+$path = @$_GET['path'];
 $mapname = @$_GET['name'];
 
-if(!preg_match('/\d[.0-9]*/', $version)) die;
+if(!preg_match('/\d[-.0-9]*\/[a-z]+/', $path)) die;
 if(!preg_match('/[a-zA-Z0-9]+/', $mapname)) die;
 
 $info = "data/$mapname.json";
-$prefix = "data/$version/$mapname";
+$prefix = "data/$path/$mapname";
 $hashes = "$prefix-hashes.json";
 $layers = "$prefix-layers.json";
 
@@ -63,7 +63,7 @@ if(file_exists($layers))
     
     $attrs = '';
     
-    if(file_exists("data/$version/$name-LightMask.webp"))
+    if(file_exists("data/$path/$name-LightMask.webp"))
     {
 ?>
 <filter id="f<?=$name?>">
@@ -83,7 +83,7 @@ if(file_exists($layers))
 <?php
       $attrs .= ' filter="url(#f'.$name.')"';
     }
-    if(file_exists("data/$version/$name-AlphaMask.webp"))
+    if(file_exists("data/$path/$name-AlphaMask.webp"))
     {
 ?>
 <mask id="m<?=$name?>">
@@ -91,7 +91,7 @@ if(file_exists($layers))
 </mask>
 <?php
       $attrs .= ' mask="url(#m'.$name.')"';
-    }else if(file_exists("data/$version/$name-GlobalAlphaMask.webp"))
+    }else if(file_exists("data/$path/$name-GlobalAlphaMask.webp"))
     {
 ?>
 <mask id="m<?=$name?>">
@@ -155,7 +155,7 @@ if(file_exists($hashes))
       $width += 1.5;
     }
     
-    $href = "../tiles/256/$hash";
+    $href = str_repeat("../", substr_count($path, "/") + 1)."tiles/256/$hash";
 ?>
 <image x="<?=$x?>" y="<?=$y?>" width="<?=$width?>" height="<?=$height?>" href="<?=$href?>" xlink:href="<?=$href?>" preserveAspectRatio="none" decoding="async"/>
 <?php

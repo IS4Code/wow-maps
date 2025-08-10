@@ -219,33 +219,33 @@ Selected layer
 <td>
 <label>Add layer: <select id="addlayer" onchange="addSelectedLayer()">
 <optgroup name="Azeroth" label="Concept maps">
-<option value="0.0.2001.10/Azeroth">October 2001 Design map</option>
-<option value="0.0.2004.0/Azeroth">Game manual map</option>
+<option value="2001-10/concept/Azeroth">October 2001 Design map</option>
+<option value="2004/concept/Azeroth">Game manual map</option>
 </optgroup>
 <optgroup name="Azeroth" label="Terrain maps">
-<option value="0.0.2002.9/Azeroth">September 2002 Minimap</option>
-<option value="0.0.2003.0/Azeroth">Early Alpha Minimap</option>
-<option value="0.0.2003.5/Azeroth">0.5.3 TaxiMap00</option>
-<option value="0.0.2003.7/Azeroth">0.5.3 World maps (old shading)</option>
-<option value="0.0.2003.8/Azeroth">0.5.3 World maps (new shading)</option>
-<option value="0.5.3/Azeroth">0.5.3 Minimap</option>
-<option value="0.6.0/Azeroth">0.6.0 Minimap</option>
-<option value="0.9.1/Azeroth">0.9.1 Minimap</option>
-<option value="1.0.0/Azeroth">1.0.0 Minimap</option>
+<option value="2002-09/terrain/Azeroth">September 2002 Minimap</option>
+<option value="2003/terrain/Azeroth">Early Alpha Minimap</option>
+<option value="2003-05/terrain/Azeroth">0.5.3 TaxiMap00</option>
+<option value="2003-07/terrain/Azeroth">0.5.3 World maps (old shading)</option>
+<option value="2003-08/terrain/Azeroth">0.5.3 World maps (new shading)</option>
+<option value="0.5.3/terrain/Azeroth">0.5.3 Minimap</option>
+<option value="0.6.0/terrain/Azeroth">0.6.0 Minimap</option>
+<option value="0.9.1/terrain/Azeroth">0.9.1 Minimap</option>
+<option value="1.0.0/terrain/Azeroth">1.0.0 Minimap</option>
 </optgroup>
 <optgroup name="Kalimdor" label="Concept maps" style="display:none">
-<option value="0.0.2001.10/Kalimdor">October 2001 Design map</option>
-<option value="0.0.2003.9/Kalimdor">September 2003 Website map</option>
-<option value="0.0.2004.0/Kalimdor">Game manual map</option>
+<option value="2001-10/concept/Kalimdor">October 2001 Design map</option>
+<option value="2003-09/concept/Kalimdor">September 2003 Website map</option>
+<option value="2004/concept/Kalimdor">Game manual map</option>
 </optgroup>
 <optgroup name="Kalimdor" label="Terrain maps" style="display:none">
-<option value="0.0.2003.6/Kalimdor">0.5.3 TaxiMap01</option>
-<option value="0.0.2003.7/Kalimdor">0.5.3 World maps (old shading)</option>
-<option value="0.0.2003.8/Kalimdor">0.5.3 World maps (new shading)</option>
-<option value="0.5.3/Kalimdor">0.5.3 Minimap</option>
-<option value="0.6.0/Kalimdor">0.6.0 Minimap</option>
-<option value="0.9.1/Kalimdor">0.9.1 Minimap</option>
-<option value="1.0.0/Kalimdor">1.0.0 Minimap</option>
+<option value="2003-06/terrain/Kalimdor">0.5.3 TaxiMap01</option>
+<option value="2003-07/terrain/Kalimdor">0.5.3 World maps (old shading)</option>
+<option value="2003-08/terrain/Kalimdor">0.5.3 World maps (new shading)</option>
+<option value="0.5.3/terrain/Kalimdor">0.5.3 Minimap</option>
+<option value="0.6.0/terrain/Kalimdor">0.6.0 Minimap</option>
+<option value="0.9.1/terrain/Kalimdor">0.9.1 Minimap</option>
+<option value="1.0.0/terrain/Kalimdor">1.0.0 Minimap</option>
 </optgroup>
 </select></label>
 </label>
@@ -764,11 +764,11 @@ function setContinent(newContinent)
     switch(newContinent)
     {
       case 'Azeroth':
-        addLayer("September 2002 Minimap", '0.0.2002.9/Azeroth');
+        addLayer("September 2002 Minimap", '2002-09/terrain/Azeroth');
         selectLayer();
         break;
       case 'Kalimdor':
-        addLayer("0.5.3 TaxiMap01", '0.0.2003.6/Kalimdor');
+        addLayer("0.5.3 TaxiMap01", '2003-06/terrain/Kalimdor');
         selectLayer();
         break;
       default:
@@ -783,7 +783,7 @@ function setContinent(newContinent)
 
 if(!fragment)
 {
-  addLayer("September 2002 Minimap", '0.0.2002.9/Azeroth');
+  addLayer("September 2002 Minimap", '2002-09/terrain/Azeroth');
   selectLayer();
 }else{
   loadFragment(fragment);
