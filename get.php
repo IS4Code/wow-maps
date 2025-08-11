@@ -8,6 +8,7 @@ if(!preg_match('/[a-zA-Z0-9]+/', $mapname)) die;
 $info = "data/$mapname.json";
 $prefix = "data/$path/$mapname";
 $hashes = "$prefix-hashes.json";
+$hashes_patched = "$prefix-hashes-patched.json";
 $layers = "$prefix-layers.json";
 
 if(!file_exists($info) || (!file_exists($hashes) && !file_exists($layers)))
@@ -120,6 +121,16 @@ if(file_exists($hashes))
   $linesV = @json_decode(@file_get_contents("$prefix-linesV.json"), true);
 
   unset($hashes[""]);
+  
+  if(file_exists($hashes_patched))
+  {
+    $hashes_patched = json_decode(file_get_contents($hashes_patched), true);
+    unset($hashes_patched[""]);
+    foreach($hashes_patched as $id => $hash)
+    {
+      $hashes[$id] = $hash;
+    }
+  }
   
   function tiles_cmp($id1, $id2)
   {
